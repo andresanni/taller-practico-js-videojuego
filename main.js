@@ -21,8 +21,7 @@ function setCanvasSize(){
     canvas.setAttribute('height',canvasSize);
 
     elementSize = canvasSize / 10; 
-
-
+    
     startGame();
 }
 
@@ -35,8 +34,25 @@ function startGame(){
     console.log({canvasSize,elementSize});
     context.font= elementSize + "px Verdana"; 
     context.textAlign = "end";
-    for (let i = 1; i <= 10; i++) {        
-        context.fillText(emojis['I'],elementSize*i,elementSize);        
+
+    const map = maps[0]; //Capturamos en un String el mapa a utilizar
+   
+    //Limpiamos los espacios vacios del comienzo y del final(trim) y Cortamos el String por sus saltos de linea y guardamos cada porcion en una posicion del arreglo 
+    const mapRows = map.trim().split('\n'); 
+    console.log({mapRows});
+   
+
+    mapRowsColumns = mapRows.map((row) => {        
+       return  row.trim().split("");                       
+    });
+
+    console.log(mapRowsColumns);
+
+
+    for (let col = 1; col <= 10; col++) {
+        for (let row = 1; row <= 10; row++) {
+            context.fillText(emojis[mapRowsColumns[col-1][row-1]],elementSize*row,elementSize*col);                         
+        }         
     }    
 
 }
