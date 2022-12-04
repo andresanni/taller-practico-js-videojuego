@@ -9,6 +9,10 @@ const buttonDown = document.querySelector("#down");
 
 let canvasSize;
 let elementSize;
+const playerPosition={
+    x:undefined,
+    y:undefined
+}
 
 
 window.addEventListener('load',setCanvasSize);
@@ -53,10 +57,21 @@ function startGame(){
             let positionY=elementSize*(rowI+1);
 
             context.fillText(emoji,positionX,positionY);
+
+            if(col==="O"){ //Mientras vamos renderizando capturamos la posicion de la puerta para asignarsela al objeto jugador
+                playerPosition.x = positionX;
+                playerPosition.y = positionY;
+            }
          })
     });
 
+    movePlayer();   
 
+}
+
+
+function movePlayer(){
+    context.fillText(emojis['PLAYER'],playerPosition.x,playerPosition.y);
 }
 
 buttonUp.addEventListener("click",moveUp);
@@ -80,7 +95,8 @@ function moveByKey(event){
 }
 
 function moveUp(){
-    console.log("ARRIBA");
+    playerPosition.y -= elementSize;
+    movePlayer();
 }
 function moveLeft(){
     console.log("IZQUIERDA"); 
