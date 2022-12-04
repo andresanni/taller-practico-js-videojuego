@@ -35,25 +35,29 @@ function startGame(){
     context.font= elementSize + "px Verdana"; 
     context.textAlign = "end";
 
-    const map = maps[0]; //Capturamos en un String el mapa a utilizar
+    const map = maps[0]; 
    
-    //Limpiamos los espacios vacios del comienzo y del final(trim) y Cortamos el String por sus saltos de linea y guardamos cada porcion en una posicion del arreglo 
     const mapRows = map.trim().split('\n'); 
-    console.log({mapRows});
-   
-
+    
     mapRowsColumns = mapRows.map((row) => {        
        return  row.trim().split("");                       
     });
 
-    console.log(mapRowsColumns);
+    mapRowsColumns.forEach((row, rowI) => {
+        row.forEach((col,colI) =>{
+            let emoji = emojis[col];
+            let positionX= elementSize*(colI+1);
+            let positionY=elementSize*(rowI+1);
 
+            context.fillText(emoji,positionX,positionY);
+         })
+    });
 
-    for (let col = 1; col <= 10; col++) {
-        for (let row = 1; row <= 10; row++) {
-            context.fillText(emojis[mapRowsColumns[col-1][row-1]],elementSize*row,elementSize*col);                         
-        }         
-    }    
+    // for (let col = 1; col <= 10; col++) {
+    //     for (let row = 1; row <= 10; row++) {
+    //         context.fillText(emojis[mapRowsColumns[col-1][row-1]],elementSize*row,elementSize*col);                         
+    //     }         
+    // }    
 
 }
 
