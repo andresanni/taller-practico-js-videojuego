@@ -6,6 +6,8 @@ const buttonLeft = document.querySelector("#left");
 const buttonRight = document.querySelector("#right");
 const buttonDown = document.querySelector("#down");
 const spanLifes = document.querySelector("#lifes");
+const spanTime = document.querySelector("#time");
+
 
 let canvasSize;
 let elementSize;
@@ -17,9 +19,13 @@ const goalPosition={
     x:undefined,
     y:undefined
 }
-let bombs =[]; //Array para bombas
+let bombs =[]; 
 let level = 0;
 let lifes = 3;
+
+let startTime; 
+let timePlayer;
+let timeInterval;
 
 window.addEventListener('load',setCanvasSize);
 window.addEventListener('resize',setCanvasSize);
@@ -51,17 +57,23 @@ function startGame(){
 
     const map = maps[level]; 
    
-    if(!map){ //Capturamos el flujo en caso de que no exista la posicion siguiente en el arreglo de niveles
+    if(!map){ 
         gameWin();
-        return; //Cortamos el flujo porque sino sigue la ejecucion normal
+        return; 
     }
+
+    if(!startTime){
+        startTime = Date.now();
+        timeInterval = setInterval(showTime,100);
+    }   
+
     const mapRows = map.trim().split('\n'); 
     
     mapRowsColumns = mapRows.map((row) => {        
        return  row.trim().split("");                       
     });
 
-    bombs =[]; //Limpiamos el array para evitar que en cada movimientro se agreguen mas bombas
+    bombs =[]; 
     context.clearRect(0,0,canvasSize,canvasSize);
 
     mapRowsColumns.forEach((row, rowI) => {
@@ -82,7 +94,7 @@ function startGame(){
                 goalPosition.y = positionY;
             }
 
-            if(col=="X"){ //Agregamos un nuevo objeto al arreglo para cada bomba con las coordenadas
+            if(col=="X"){ 
                 bombs.push({x:positionX,y:positionY});
             }
          })
@@ -93,13 +105,13 @@ function startGame(){
 
 function movePlayer(){
     
-    const goalCollisionX = playerPosition.x.toFixed(5) == goalPosition.x.toFixed(5);//Reducimos los decimales para evitar erroes cuando son muchos
+    const goalCollisionX = playerPosition.x.toFixed(5) == goalPosition.x.toFixed(5);
     const goalCollisionY = playerPosition.y.toFixed(5) == goalPosition.y.toFixed(5);
 
     if(goalCollisionX&&goalCollisionY){
         levelComplete();
     }
-    //Chequeamos que en la nueva posicion no haya nuinguna bomba con las ¿mismas coordenadas
+    
     const bombCollision = bombs.find(bomb=>{return bomb.x == playerPosition.x && bomb.y == playerPosition.y});
 
     if(bombCollision){
@@ -165,6 +177,7 @@ function levelComplete(){
 
 function gameWin(){
     console.log("JUEGO TERMINADO!")
+    clearInterval(timeInterval);
 }
 
 function levelFailed(){
@@ -185,6 +198,7 @@ function gameOver(){
     lifes =3;
     playerPosition.x = undefined;
     playerPosition.y=undefined;
+    startTime = undefined;
     startGame();
 }
 
@@ -193,3 +207,8 @@ function showLifes(){
   const heartsArray= Array(lifes).fill(emojis["HEART"]);
   heartsArray.forEach(heart=>{spanLifes.innerHTML+=heart})
 }
+
+function showTime(){
+    spanTime.innerHTML = Date.now()-startTime;
+}
+
