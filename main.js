@@ -39,7 +39,7 @@ function setCanvasSize(){
 function startGame(){
 
     console.log({canvasSize,elementSize});
-    context.font= elementSize + "px Verdana"; 
+    context.font= elementSize-7 + "px Verdana"; 
     context.textAlign = "end";
 
     const map = maps[0]; 
@@ -50,6 +50,8 @@ function startGame(){
        return  row.trim().split("");                       
     });
 
+    context.clearRect(0,0,canvasSize,canvasSize); //Agregamos una liompieza antes de renderizar el mapa
+
     mapRowsColumns.forEach((row, rowI) => {
         row.forEach((col,colI) =>{
             let emoji = emojis[col];
@@ -58,7 +60,7 @@ function startGame(){
 
             context.fillText(emoji,positionX,positionY);
 
-            if(col==="O"){ //Mientras vamos renderizando capturamos la posicion de la puerta para asignarsela al objeto jugador
+            if(col==="O"&& !playerPosition.x && !playerPosition.y){
                 playerPosition.x = positionX;
                 playerPosition.y = positionY;
             }
@@ -96,15 +98,18 @@ function moveByKey(event){
 
 function moveUp(){
     playerPosition.y -= elementSize;
-    movePlayer();
+    startGame();
 }
 function moveLeft(){
-    console.log("IZQUIERDA"); 
+    playerPosition.x -= elementSize;
+    startGame();
 }
 function moveRight(){
-    console.log("DERECHA");
+    playerPosition.x += elementSize;
+    startGame();
 }
 function moveDown(){
-    console.log("ABAJO");
+    playerPosition.y += elementSize;
+    startGame();
 }
 
