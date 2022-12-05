@@ -13,6 +13,10 @@ const playerPosition={
     x:undefined,
     y:undefined
 }
+const goalPosition={
+    x:undefined,
+    y:undefined
+}
 
 
 window.addEventListener('load',setCanvasSize);
@@ -64,6 +68,11 @@ function startGame(){
                 playerPosition.x = positionX;
                 playerPosition.y = positionY;
             }
+
+            if(col=="I"){
+                goalPosition.x= positionX;
+                goalPosition.y = positionY;
+            }
          })
     });
 
@@ -73,7 +82,18 @@ function startGame(){
 
 
 function movePlayer(){
+    
+    const goalCollisionX = playerPosition.x.toFixed(5) == goalPosition.x.toFixed(5);//Reducimos los decimales para evitar erroes cuando son muchos
+    const goalCollisionY = playerPosition.y.toFixed(5) == goalPosition.y.toFixed(5);
+
+    if(goalCollisionX&&goalCollisionY){
+        console.log("GOALL!!!")
+    }
+    
+    
+
     context.fillText(emojis['PLAYER'],playerPosition.x,playerPosition.y);
+
 }
 
 buttonUp.addEventListener("click",moveUp);
