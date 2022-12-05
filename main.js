@@ -97,19 +97,27 @@ function moveByKey(event){
 }
 
 function moveUp(){
+    if(!((playerPosition.y-elementSize)<elementSize)){ //Limitador de fin de mapa
     playerPosition.y -= elementSize;
-    startGame();
+    startGame();}
 }
 function moveLeft(){
-    playerPosition.x -= elementSize;
-    startGame();
-}
+    if(!((playerPosition.x-elementSize)<elementSize)){ //Limitador de fin de mapa
+        playerPosition.x -= elementSize;
+        startGame();}
+    }
+
 function moveRight(){
-    playerPosition.x += elementSize;
-    startGame();
-}
+    if(!((playerPosition.x+elementSize)>canvasSize)){ //Limitador de fin de mapa
+        playerPosition.x += elementSize;
+        startGame();}
+    }
+
 function moveDown(){
-    playerPosition.y += elementSize;
-    startGame();
-}
+    if(!((playerPosition.y+elementSize)>canvasSize)){ //Limitador de fin de mapa
+        playerPosition.y += elementSize;
+        startGame();}
+    }
+  
+
 
