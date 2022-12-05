@@ -18,6 +18,7 @@ const goalPosition={
     y:undefined
 }
 let bombs =[]; //Array para bombas
+let level = 0;
 
 
 window.addEventListener('load',setCanvasSize);
@@ -47,8 +48,13 @@ function startGame(){
     context.font= elementSize-7 + "px Verdana"; 
     context.textAlign = "end";
 
-    const map = maps[1]; 
+
+    const map = maps[level]; 
    
+    if(!map){ //Capturamos el flujo en caso de que no exista la posicion siguiente en el arreglo de niveles
+        gameWin();
+        return; //Cortamos el flujo porque sino sigue la ejecucion normal
+    }
     const mapRows = map.trim().split('\n'); 
     
     mapRowsColumns = mapRows.map((row) => {        
@@ -92,7 +98,7 @@ function movePlayer(){
     const goalCollisionY = playerPosition.y.toFixed(5) == goalPosition.y.toFixed(5);
 
     if(goalCollisionX&&goalCollisionY){
-        console.log("GOALL!!!")
+        levelComplete();
     }  
 
     //Chequeamos que en la nueva posicion no haya nuinguna bomba con las ¿mismas coordenadas
@@ -153,5 +159,12 @@ function moveDown(){
         startGame();}
     }
   
+function levelComplete(){
+    console.log("Subimos de nivel");
+    level++;
+    startGame();
+}
 
-
+function gameWin(){
+    console.log("JUEGO TERMINADO!")
+}
