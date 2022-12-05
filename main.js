@@ -17,6 +17,7 @@ const goalPosition={
     x:undefined,
     y:undefined
 }
+let bombs =[]; //Array para bombas
 
 
 window.addEventListener('load',setCanvasSize);
@@ -42,11 +43,11 @@ function setCanvasSize(){
 
 function startGame(){
 
-    console.log({canvasSize,elementSize});
+    
     context.font= elementSize-7 + "px Verdana"; 
     context.textAlign = "end";
 
-    const map = maps[0]; 
+    const map = maps[1]; 
    
     const mapRows = map.trim().split('\n'); 
     
@@ -54,7 +55,8 @@ function startGame(){
        return  row.trim().split("");                       
     });
 
-    context.clearRect(0,0,canvasSize,canvasSize); //Agregamos una liompieza antes de renderizar el mapa
+    bombs =[]; //Limpiamos el array para evitar que en cada movimientro se agreguen mas bombas
+    context.clearRect(0,0,canvasSize,canvasSize);
 
     mapRowsColumns.forEach((row, rowI) => {
         row.forEach((col,colI) =>{
@@ -73,13 +75,16 @@ function startGame(){
                 goalPosition.x= positionX;
                 goalPosition.y = positionY;
             }
+
+            if(col=="X"){ //Agregamos un nuevo objeto al arreglo para cada bomba con las coordenadas
+                bombs.push({x:positionX,y:positionY});
+            }
          })
     });
 
     movePlayer();   
 
 }
-
 
 function movePlayer(){
     
@@ -88,9 +93,14 @@ function movePlayer(){
 
     if(goalCollisionX&&goalCollisionY){
         console.log("GOALL!!!")
+    }  
+
+    //Chequeamos que en la nueva posicion no haya nuinguna bomba con las ¿mismas coordenadas
+    const bombCollision = bombs.find(bomb=>{return bomb.x == playerPosition.x && bomb.y == playerPosition.y});
+
+    if(bombCollision){
+        console.log("PUM!")
     }
-    
-    
 
     context.fillText(emojis['PLAYER'],playerPosition.x,playerPosition.y);
 
@@ -102,6 +112,7 @@ buttonRight.addEventListener("click",moveRight);
 buttonDown.addEventListener("click",moveDown); 
 
 window.addEventListener("keydown",moveByKey);
+
 
 function moveByKey(event){
     switch(event.key){
@@ -116,25 +127,28 @@ function moveByKey(event){
     }
 }
 
+
 function moveUp(){
-    if(!((playerPosition.y-elementSize)<elementSize)){ //Limitador de fin de mapa
+    if(!((playerPosition.y-elementSize)<elementSize)){ 
     playerPosition.y -= elementSize;
     startGame();}
 }
 function moveLeft(){
-    if(!((playerPosition.x-elementSize)<elementSize)){ //Limitador de fin de mapa
+    if(!((playerPosition.x-elementSize)<elementSize)){ 
         playerPosition.x -= elementSize;
         startGame();}
     }
 
+
 function moveRight(){
-    if(!((playerPosition.x+elementSize)>canvasSize)){ //Limitador de fin de mapa
+    if(!((playerPosition.x+elementSize)>canvasSize)){ 
         playerPosition.x += elementSize;
         startGame();}
     }
 
+
 function moveDown(){
-    if(!((playerPosition.y+elementSize)>canvasSize)){ //Limitador de fin de mapa
+    if(!((playerPosition.y+elementSize)>canvasSize)){ 
         playerPosition.y += elementSize;
         startGame();}
     }
