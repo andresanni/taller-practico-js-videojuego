@@ -5,6 +5,7 @@ const buttonUp = document.querySelector("#up");
 const buttonLeft = document.querySelector("#left");
 const buttonRight = document.querySelector("#right");
 const buttonDown = document.querySelector("#down");
+const spanLifes = document.querySelector("#lifes");
 
 let canvasSize;
 let elementSize;
@@ -42,7 +43,7 @@ function setCanvasSize(){
 
 
 function startGame(){
-    console.log(lifes);
+    showLifes();
     
     context.font= elementSize-7 + "px Verdana"; 
     context.textAlign = "end";
@@ -104,7 +105,7 @@ function movePlayer(){
     if(bombCollision){
         levelFailed();
     }
-    
+
     context.fillText(emojis['PLAYER'],playerPosition.x,playerPosition.y);
 
 }
@@ -185,4 +186,10 @@ function gameOver(){
     playerPosition.x = undefined;
     playerPosition.y=undefined;
     startGame();
+}
+
+function showLifes(){
+  spanLifes.innerHTML="";  
+  const heartsArray= Array(lifes).fill(emojis["HEART"]);
+  heartsArray.forEach(heart=>{spanLifes.innerHTML+=heart})
 }
