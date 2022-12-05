@@ -7,6 +7,8 @@ const buttonRight = document.querySelector("#right");
 const buttonDown = document.querySelector("#down");
 const spanLifes = document.querySelector("#lifes");
 const spanTime = document.querySelector("#time");
+const spanRecord = document.querySelector("#record");
+const pResult = document.querySelector("#result");
 
 
 let canvasSize;
@@ -65,6 +67,7 @@ function startGame(){
     if(!startTime){
         startTime = Date.now();
         timeInterval = setInterval(showTime,100);
+        showRecord();
     }   
 
     const mapRows = map.trim().split('\n'); 
@@ -178,6 +181,22 @@ function levelComplete(){
 function gameWin(){
     console.log("JUEGO TERMINADO!")
     clearInterval(timeInterval);
+
+    const record= localStorage.getItem("record_time");
+    const playerTime = Date.now()-startTime;
+
+    if(record){
+        if(playerTime<record){
+            localStorage.setItem("record_time",playerTime);
+            pResult.innerHTML="Eres el nuevo record";
+        }else{
+            pResult.innerHTML="No se Supero el record";
+        }
+    }
+    else{
+        localStorage.setItem("record_time",playerTime);
+        pResult.innerHTML="Primera vez, aún no hay record";
+    }
 }
 
 function levelFailed(){
@@ -209,6 +228,18 @@ function showLifes(){
 }
 
 function showTime(){
-    spanTime.innerHTML = Date.now()-startTime;
+    spanTime.innerHTML = millisToMinutesAndSeconds(Date.now()-startTime);
+
 }
 
+function showRecord(){
+    spanRecord.innerHTML = millisToMinutesAndSeconds(localStorage.getItem("record_time"));
+}
+
+
+
+function millisToMinutesAndSeconds(millis) {
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+  }
