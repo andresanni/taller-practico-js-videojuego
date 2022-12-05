@@ -6,7 +6,6 @@ const buttonLeft = document.querySelector("#left");
 const buttonRight = document.querySelector("#right");
 const buttonDown = document.querySelector("#down");
 
-
 let canvasSize;
 let elementSize;
 const playerPosition={
@@ -19,7 +18,7 @@ const goalPosition={
 }
 let bombs =[]; //Array para bombas
 let level = 0;
-
+let lifes = 3;
 
 window.addEventListener('load',setCanvasSize);
 window.addEventListener('resize',setCanvasSize);
@@ -43,7 +42,7 @@ function setCanvasSize(){
 
 
 function startGame(){
-
+    console.log(lifes);
     
     context.font= elementSize-7 + "px Verdana"; 
     context.textAlign = "end";
@@ -89,7 +88,6 @@ function startGame(){
     });
 
     movePlayer();   
-
 }
 
 function movePlayer(){
@@ -99,15 +97,14 @@ function movePlayer(){
 
     if(goalCollisionX&&goalCollisionY){
         levelComplete();
-    }  
-
+    }
     //Chequeamos que en la nueva posicion no haya nuinguna bomba con las ¿mismas coordenadas
     const bombCollision = bombs.find(bomb=>{return bomb.x == playerPosition.x && bomb.y == playerPosition.y});
 
     if(bombCollision){
-        console.log("PUM!")
+        levelFailed();
     }
-
+    
     context.fillText(emojis['PLAYER'],playerPosition.x,playerPosition.y);
 
 }
@@ -167,4 +164,25 @@ function levelComplete(){
 
 function gameWin(){
     console.log("JUEGO TERMINADO!")
+}
+
+function levelFailed(){
+    if(lifes > 0){   
+    lifes --;
+    playerPosition.x = undefined;
+    playerPosition.y=undefined;
+    startGame();
+}
+    else{
+        gameOver();
+    }
+
+}
+
+function gameOver(){
+    level=0;
+    lifes =3;
+    playerPosition.x = undefined;
+    playerPosition.y=undefined;
+    startGame();
 }
